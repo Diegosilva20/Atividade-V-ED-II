@@ -6,6 +6,7 @@ class docentes
 {
 public:
     docentes(QString matricula,QString nome,QString departamento,QString titulacao,QString tipoDeContrato);
+    docentes();
     ~docentes();
     QString getMatricula() const;
 

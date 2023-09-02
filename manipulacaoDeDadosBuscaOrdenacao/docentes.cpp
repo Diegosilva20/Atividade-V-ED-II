@@ -6,6 +6,7 @@ docentes::docentes(QString matricula, QString nome, QString departamento, QStrin
 
 }
 
+docentes::docentes(){}
 docentes::~docentes(){}
 
 QString docentes::getMatricula() const

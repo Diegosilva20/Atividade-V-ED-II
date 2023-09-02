@@ -10,7 +10,7 @@ readCsv::readCsv(const std::string &nomeArquivo) : nomeArquivo(nomeArquivo)
 }
 
 readCsv::~readCsv(){
-    arrayDocentes.clear();
+
 }
 std::vector<docentes> readCsv::lerArquivo(){
     try{

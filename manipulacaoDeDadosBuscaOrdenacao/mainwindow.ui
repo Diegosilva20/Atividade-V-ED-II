@@ -44,7 +44,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit"/>
+        <widget class="QLineEdit" name="lineEditDado"/>
        </item>
        <item>
         <widget class="QComboBox" name="comboBoxBusca">
@@ -95,6 +95,11 @@
       <widget class="QComboBox" name="comboBoxOrdenacao">
        <item>
         <property name="text">
+         <string>Selecione</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Matricula</string>
         </property>
        </item>
@@ -132,12 +137,12 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>630</x>
+      <x>600</x>
       <y>50</y>
-      <width>141</width>
+      <width>181</width>
       <height>56</height>
      </rect>
     </property>

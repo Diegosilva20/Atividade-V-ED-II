@@ -5,6 +5,9 @@
 #include <QTableView>
 #include <QStandardItemModel>
 #include <vector>
+#include <fstream>
+#include <iostream>
+#include <QMessageBox>
 #include "readcsv.h"
 #include "docentes.h"
 #include "docentes.h"
@@ -17,6 +20,7 @@
 #include "compararpordepartamentoandnome.h"
 #include "comparartipocontratoandnome.h"
 #include "comparartitulacaoandnome.h"
+#include "buscar.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -34,10 +38,26 @@ private slots:
 
     void on_comboBoxOrdenacao_currentIndexChanged(int index);
 
+    void on_pushButtonBuscar_clicked();
+
+
 private:
     Ui::MainWindow *ui;
     QStandardItemModel *model;
     QTableView *tableView;
     std::vector<docentes> arrayDocentes;
+    QStandardItem* itemMatricula = nullptr;
+    QStandardItem* itemNome = nullptr;
+    QStandardItem* itemDepartamento = nullptr;
+    QStandardItem* itemTitulacao = nullptr;
+    QStandardItem* itemTipoContrato = nullptr;
+    compararPorNome CompararPorNome;
+    compararPorMatricula CompararPorMatricula;
+    compararTitulacaoAndNome CompararTitulacaoNome;
+    compararTipoContratoAndNome CompararTipoContratoNome;
+    compararPorDepartamentoAndNome DepartamentoNome;
+    compararDepartamentoTitulacaoNome DepartamentoTitulacaoNome;
+    compararDepartamentoTipoContratoNome DepartamentoTpNome;
+    buscar busca;
 };
 #endif // MAINWINDOW_H

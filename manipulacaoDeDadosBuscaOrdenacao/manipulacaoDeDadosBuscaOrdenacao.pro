@@ -9,6 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    buscar.cpp \
     comparardepartamentotipocontratonome.cpp \
     comparardepartamentotitulacaonome.cpp \
     compararpordepartamentoandnome.cpp \
@@ -20,10 +21,10 @@ SOURCES += \
     docentescomparador.cpp \
     docentesordena.cpp \
     main.cpp \
-    mainwindow.cpp \
-    readcsv.cpp
+    mainwindow.cpp
 
 HEADERS += \
+    buscar.h \
     comparardepartamentotipocontratonome.h \
     comparardepartamentotitulacaonome.h \
     compararpordepartamentoandnome.h \
@@ -34,8 +35,7 @@ HEADERS += \
     docentes.h \
     docentescomparador.h \
     docentesordena.h \
-    mainwindow.h \
-    readcsv.h
+    mainwindow.h
 
 FORMS += \
     mainwindow.ui

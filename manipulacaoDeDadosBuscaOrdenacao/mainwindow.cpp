@@ -6,7 +6,6 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    //arrayDocentes = nullptr;
     model = new QStandardItemModel(this);
     model->setColumnCount(5); //nº de colunas
     // colocando o titulo das tabelas
@@ -21,31 +20,30 @@ MainWindow::MainWindow(QWidget *parent)
     tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
-    readCsv a("/home/puc/Documentos/manipulacaoDeDadosBuscaOrdenacao/DocentesEscola.csv");
-    arrayDocentes = a.lerArquivo();//pegando o vetor de objetos com os dados do arquivo
-    /*int tam = arrayDocentes.size();
-    // colocando os dados na Qtable
-    for(int i = 0;i < tam;i++){
-        QString matricula = arrayDocentes[i].getMatricula();
-        QString nome = arrayDocentes[i].getNome();
-        QString departamento = arrayDocentes[i].getDepartamento();
-        QString titulacao = arrayDocentes[i].getTitulacao();
-        QString tipoContrato = arrayDocentes[i].getTipoDeContrato();
+    try{
+        ifstream arquivo("C:/Users/dpsil/OneDrive/Documentos/manipulacaoDeDadosBuscaOrdenacao/DocentesEscola.csv");
+        if(!arquivo.is_open()){
+            throw std::runtime_error("ERRO AO ABRIR ARQUIVO");
+        }
+        std::string linha="";
+        while(std::getline(arquivo,linha)){
+            QStringList lista = QString::fromStdString(linha).split(';');//convertendo string para QString
+            // verificando abaixo se alguma linha do arquivo está com erro
+            if(!(lista.value(0).isEmpty()||lista.value(1).isEmpty()||lista.value(2).isEmpty()||lista.value(3).isEmpty()||lista.value(4).isEmpty())){
+                QString matricula = lista.value(0);
+                QString nome = lista.value(1);
+                QString departamento = lista.value(2);
+                QString titulacao = lista.value(3);
+                QString tipoContrato = lista.value(4);
+                docentes docente(matricula,nome,departamento,titulacao,tipoContrato);
+                arrayDocentes.push_back(docente);
+            }
+        }
+        arquivo.close();
 
-        QStandardItem* itemMatricula = new QStandardItem(matricula);
-        QStandardItem* itemNome = new QStandardItem(nome);
-        QStandardItem* itemDepartamento = new QStandardItem(departamento);
-        QStandardItem* itemTitulacao = new QStandardItem(titulacao);
-        QStandardItem* itemTipoContrato = new QStandardItem(tipoContrato);
-
-        model->setItem(i,0,itemMatricula);
-        model->setItem(i,1,itemNome);
-        model->setItem(i,2,itemDepartamento);
-        model->setItem(i,3,itemTitulacao);
-        model->setItem(i,4,itemTipoContrato);
-
-    }*/
-    //connect(ui.comboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &SeuFormulario::onComboBoxIndexChanged);
+    } catch(std::bad_alloc &erro){
+        std::cerr << "Erro ao alocar memória: " << erro.what() << std::endl;
+    }
 
 }
 
@@ -54,27 +52,18 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
-
 void MainWindow::on_comboBoxOrdenacao_currentIndexChanged(int index)
 {
-    if(index == 0){
-        compararPorMatricula CompararPorMatricula;
-        docentesOrdena ordenarPorMatricula(arrayDocentes,CompararPorMatricula);
-        vector<docentes>arrayOrdenadoMatricula = ordenarPorMatricula.ordena();
-        int tam = arrayOrdenadoMatricula.size();
+    if(index == 1){
+        docentesOrdena ordena(arrayDocentes,CompararPorMatricula);
+        arrayDocentes = ordena.ordena();
+        int tam = arrayDocentes.size();
         for(int i = 0;i < tam;i++){
-            QString matricula = arrayOrdenadoMatricula[i].getMatricula();
-            QString nome = arrayOrdenadoMatricula[i].getNome();
-            QString departamento = arrayOrdenadoMatricula[i].getDepartamento();
-            QString titulacao = arrayOrdenadoMatricula[i].getTitulacao();
-            QString tipoContrato = arrayOrdenadoMatricula[i].getTipoDeContrato();
-
-            QStandardItem* itemMatricula = new QStandardItem(matricula);
-            QStandardItem* itemNome = new QStandardItem(nome);
-            QStandardItem* itemDepartamento = new QStandardItem(departamento);
-            QStandardItem* itemTitulacao = new QStandardItem(titulacao);
-            QStandardItem* itemTipoContrato = new QStandardItem(tipoContrato);
+            itemMatricula = new QStandardItem(arrayDocentes[i].getMatricula());
+            itemNome = new QStandardItem(arrayDocentes[i].getNome());
+            itemDepartamento = new QStandardItem(arrayDocentes[i].getDepartamento());
+            itemTitulacao = new QStandardItem(arrayDocentes[i].getTitulacao());
+            itemTipoContrato = new QStandardItem(arrayDocentes[i].getTipoDeContrato());
 
             model->setItem(i,0,itemMatricula);
             model->setItem(i,1,itemNome);
@@ -84,50 +73,34 @@ void MainWindow::on_comboBoxOrdenacao_currentIndexChanged(int index)
             }
     }
     else{
-        if(index == 1){
-            compararPorNome CompararPorNome;
-            docentesOrdena ordenarPorNome(arrayDocentes,CompararPorNome);
-            vector<docentes> arrayOrdenadoPorNome = ordenarPorNome.ordena();
-            int tam = arrayOrdenadoPorNome.size();
-            // colocando os dados na Qtable
+        if(index == 2){
+            docentesOrdena ordena(arrayDocentes,CompararPorNome);
+            arrayDocentes = ordena.ordena();
+            int tam = arrayDocentes.size();
             for(int i = 0;i < tam;i++){
-                QString matricula = arrayOrdenadoPorNome[i].getMatricula();
-                QString nome = arrayOrdenadoPorNome[i].getNome();
-                QString departamento = arrayOrdenadoPorNome[i].getDepartamento();
-                QString titulacao = arrayOrdenadoPorNome[i].getTitulacao();
-                QString tipoContrato = arrayOrdenadoPorNome[i].getTipoDeContrato();
-
-                QStandardItem* itemMatricula = new QStandardItem(matricula);
-                QStandardItem* itemNome = new QStandardItem(nome);
-                QStandardItem* itemDepartamento = new QStandardItem(departamento);
-                QStandardItem* itemTitulacao = new QStandardItem(titulacao);
-                QStandardItem* itemTipoContrato = new QStandardItem(tipoContrato);
+                itemMatricula = new QStandardItem(arrayDocentes[i].getMatricula());
+                itemNome = new QStandardItem(arrayDocentes[i].getNome());
+                itemDepartamento = new QStandardItem(arrayDocentes[i].getDepartamento());
+                itemTitulacao = new QStandardItem(arrayDocentes[i].getTitulacao());
+                itemTipoContrato = new QStandardItem(arrayDocentes[i].getTipoDeContrato());
 
                 model->setItem(i,0,itemMatricula);
                 model->setItem(i,1,itemNome);
                 model->setItem(i,2,itemDepartamento);
                 model->setItem(i,3,itemTitulacao);
                 model->setItem(i,4,itemTipoContrato);
-             }
-        }
-        else{
-            if(index == 2){
-                compararPorDepartamentoAndNome comparar;
-                docentesOrdena ordenar(arrayDocentes,comparar);
-                vector<docentes>arrayOrdenado = ordenar.ordena();
-                int tam = arrayOrdenado.size();
+            }
+        }else{
+            if(index == 3){
+                docentesOrdena ordena(arrayDocentes,DepartamentoNome);
+                arrayDocentes = ordena.ordena();
+                int tam = arrayDocentes.size();
                 for(int i = 0;i < tam;i++){
-                    QString matricula = arrayOrdenado[i].getMatricula();
-                    QString nome = arrayOrdenado[i].getNome();
-                    QString departamento = arrayOrdenado[i].getDepartamento();
-                    QString titulacao = arrayOrdenado[i].getTitulacao();
-                    QString tipoContrato = arrayOrdenado[i].getTipoDeContrato();
-
-                    QStandardItem* itemMatricula = new QStandardItem(matricula);
-                    QStandardItem* itemNome = new QStandardItem(nome);
-                    QStandardItem* itemDepartamento = new QStandardItem(departamento);
-                    QStandardItem* itemTitulacao = new QStandardItem(titulacao);
-                    QStandardItem* itemTipoContrato = new QStandardItem(tipoContrato);
+                    itemMatricula = new QStandardItem(arrayDocentes[i].getMatricula());
+                    itemNome = new QStandardItem(arrayDocentes[i].getNome());
+                    itemDepartamento = new QStandardItem(arrayDocentes[i].getDepartamento());
+                    itemTitulacao = new QStandardItem(arrayDocentes[i].getTitulacao());
+                    itemTipoContrato = new QStandardItem(arrayDocentes[i].getTipoDeContrato());
 
                     model->setItem(i,0,itemMatricula);
                     model->setItem(i,1,itemNome);
@@ -135,13 +108,112 @@ void MainWindow::on_comboBoxOrdenacao_currentIndexChanged(int index)
                     model->setItem(i,3,itemTitulacao);
                     model->setItem(i,4,itemTipoContrato);
                 }
-            }
-            else{
-                if(index == 3){
 
+            }else{
+                if(index == 4){
+                    docentesOrdena ordena(arrayDocentes,DepartamentoNome);
+                    arrayDocentes = ordena.ordena();
+                    int tam = arrayDocentes.size();
+                    for(int i = 0;i < tam;i++){
+                        itemMatricula = new QStandardItem(arrayDocentes[i].getMatricula());
+                        itemNome = new QStandardItem(arrayDocentes[i].getNome());
+                        itemDepartamento = new QStandardItem(arrayDocentes[i].getDepartamento());
+                        itemTitulacao = new QStandardItem(arrayDocentes[i].getTitulacao());
+                        itemTipoContrato = new QStandardItem(arrayDocentes[i].getTipoDeContrato());
+
+                        model->setItem(i,0,itemMatricula);
+                        model->setItem(i,1,itemNome);
+                        model->setItem(i,2,itemDepartamento);
+                        model->setItem(i,3,itemTitulacao);
+                        model->setItem(i,4,itemTipoContrato);
+                    }
+                }else{
+                    if(index == 5){
+                        docentesOrdena ordena(arrayDocentes,CompararTipoContratoNome);
+                        arrayDocentes = ordena.ordena();
+                        int tam = arrayDocentes.size();
+                        for(int i = 0;i < tam;i++){
+                            itemMatricula = new QStandardItem(arrayDocentes[i].getMatricula());
+                            itemNome = new QStandardItem(arrayDocentes[i].getNome());
+                            itemDepartamento = new QStandardItem(arrayDocentes[i].getDepartamento());
+                            itemTitulacao = new QStandardItem(arrayDocentes[i].getTitulacao());
+                            itemTipoContrato = new QStandardItem(arrayDocentes[i].getTipoDeContrato());
+
+                            model->setItem(i,0,itemMatricula);
+                            model->setItem(i,1,itemNome);
+                            model->setItem(i,2,itemDepartamento);
+                            model->setItem(i,3,itemTitulacao);
+                            model->setItem(i,4,itemTipoContrato);
+                        }
+                    }else{
+                        if(index == 6){
+                            docentesOrdena ordena(arrayDocentes,DepartamentoTitulacaoNome);
+                            arrayDocentes = ordena.ordena();
+                            int tam = arrayDocentes.size();
+                            for(int i = 0;i < tam;i++){
+                                itemMatricula = new QStandardItem(arrayDocentes[i].getMatricula());
+                                itemNome = new QStandardItem(arrayDocentes[i].getNome());
+                                itemDepartamento = new QStandardItem(arrayDocentes[i].getDepartamento());
+                                itemTitulacao = new QStandardItem(arrayDocentes[i].getTitulacao());
+                                itemTipoContrato = new QStandardItem(arrayDocentes[i].getTipoDeContrato());
+
+                                model->setItem(i,0,itemMatricula);
+                                model->setItem(i,1,itemNome);
+                                model->setItem(i,2,itemDepartamento);
+                                model->setItem(i,3,itemTitulacao);
+                                model->setItem(i,4,itemTipoContrato);
+                            }
+                        }else{
+                            docentesOrdena ordena(arrayDocentes,DepartamentoTpNome);
+                            arrayDocentes = ordena.ordena();
+                            int tam = arrayDocentes.size();
+                            for(int i = 0;i < tam;i++){
+                                itemMatricula = new QStandardItem(arrayDocentes[i].getMatricula());
+                                itemNome = new QStandardItem(arrayDocentes[i].getNome());
+                                itemDepartamento = new QStandardItem(arrayDocentes[i].getDepartamento());
+                                itemTitulacao = new QStandardItem(arrayDocentes[i].getTitulacao());
+                                itemTipoContrato = new QStandardItem(arrayDocentes[i].getTipoDeContrato());
+
+                                model->setItem(i,0,itemMatricula);
+                                model->setItem(i,1,itemNome);
+                                model->setItem(i,2,itemDepartamento);
+                                model->setItem(i,3,itemTitulacao);
+                                model->setItem(i,4,itemTipoContrato);
+                            }
+                        }
+                    }
                 }
             }
         }
     }
+ }
+
+
+void MainWindow::on_pushButtonBuscar_clicked()
+{
+    QString opcao = ui->comboBoxBusca->currentText();
+    if(opcao == "Busca Sequencial  - Nome"){
+        docentesOrdena ordena(arrayDocentes,CompararPorNome);
+        arrayDocentes = ordena.ordena();
+        if(ui->lineEditDado->text().isEmpty()) throw QString("Digite o nome que seja buscar");
+        docentes obj = busca.buscaSequencialNome(arrayDocentes,ui->lineEditDado->text());
+        if(obj.getNome().isEmpty())throw QString("Professor não existente na base de dados");
+        if (model) {
+            model->removeRows(0, model->rowCount()); // Remove todas as linhas da tabela.
+        }
+        itemMatricula = new QStandardItem(obj.getMatricula());
+        itemNome = new QStandardItem(obj.getNome());
+        itemDepartamento = new QStandardItem(obj.getDepartamento());
+        itemTitulacao = new QStandardItem(obj.getTitulacao());
+        itemTipoContrato = new QStandardItem(obj.getTipoDeContrato());
+
+        model->setItem(0,0,itemMatricula);
+        model->setItem(0,1,itemNome);
+        model->setItem(0,2,itemDepartamento);
+        model->setItem(0,3,itemTitulacao);
+        model->setItem(0,4,itemTipoContrato);
+    }
 }
+
+
 
