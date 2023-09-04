@@ -33,6 +33,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void imprimirNaTela(vector<docentes> arrayDocentes);
 
 private slots:
 
@@ -59,5 +60,6 @@ private:
     compararDepartamentoTitulacaoNome DepartamentoTitulacaoNome;
     compararDepartamentoTipoContratoNome DepartamentoTpNome;
     buscar busca;
+    docentes obj;
 };
 #endif // MAINWINDOW_H

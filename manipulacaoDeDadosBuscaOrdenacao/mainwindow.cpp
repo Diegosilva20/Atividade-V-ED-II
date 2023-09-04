@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
     try{
-        ifstream arquivo("/home/puc/Downloads/manipulacaoDeDadosBuscaOrdenacao/DocentesEscola.csv");
+        ifstream arquivo("C:/Users/dpsil/Downloads/manipulacaoDeDadosBuscaOrdenacao/DocentesEscola.csv");
         if(!arquivo.is_open()){
             throw std::runtime_error("ERRO AO ABRIR ARQUIVO");
         }
@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
         while(std::getline(arquivo,linha)){
             QStringList lista = QString::fromStdString(linha).split(';');//convertendo string para QString
             // verificando abaixo se alguma linha do arquivo está com erro
-            if(!(lista.value(0).isEmpty()||lista.value(1).isEmpty()||lista.value(2).isEmpty()||lista.value(3).isEmpty()||lista.value(4).isEmpty())){
+            if((!(lista.value(0).isEmpty()||lista.value(1).isEmpty()||lista.value(2).isEmpty()||lista.value(3).isEmpty()||lista.value(4).isEmpty()))&&lista.size()==5){
                 QString matricula = lista.value(0);
                 QString nome = lista.value(1);
                 QString departamento = lista.value(2);
@@ -41,10 +41,15 @@ MainWindow::MainWindow(QWidget *parent)
         }
         arquivo.close();
 
-    } catch(std::bad_alloc &erro){
-        std::cerr << "Erro ao alocar memória: " << erro.what() << std::endl;
+    } catch(QString &erro){
+        QMessageBox::information(this,"ERRO",erro);
     }
 
+    imprimirNaTela(arrayDocentes);
+
+}
+
+void MainWindow::imprimirNaTela(vector<docentes>arrayDocentes){
     int tam = arrayDocentes.size();
     for(int i = 0;i < tam;i++){
         itemMatricula = new QStandardItem(arrayDocentes[i].getMatricula());
@@ -59,9 +64,7 @@ MainWindow::MainWindow(QWidget *parent)
         model->setItem(i,3,itemTitulacao);
         model->setItem(i,4,itemTipoContrato);
     }
-
 }
-
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -72,129 +75,37 @@ void MainWindow::on_comboBoxOrdenacao_currentIndexChanged(int index)
     if(index == 1){
         docentesOrdena ordena(arrayDocentes,CompararPorMatricula);
         arrayDocentes = ordena.ordena();
-        int tam = arrayDocentes.size();
-        for(int i = 0;i < tam;i++){
-            itemMatricula = new QStandardItem(arrayDocentes[i].getMatricula());
-            itemNome = new QStandardItem(arrayDocentes[i].getNome());
-            itemDepartamento = new QStandardItem(arrayDocentes[i].getDepartamento());
-            itemTitulacao = new QStandardItem(arrayDocentes[i].getTitulacao());
-            itemTipoContrato = new QStandardItem(arrayDocentes[i].getTipoDeContrato());
-
-            model->setItem(i,0,itemMatricula);
-            model->setItem(i,1,itemNome);
-            model->setItem(i,2,itemDepartamento);
-            model->setItem(i,3,itemTitulacao);
-            model->setItem(i,4,itemTipoContrato);
-            }
+        imprimirNaTela(arrayDocentes);
     }
     else{
         if(index == 2){
             docentesOrdena ordena(arrayDocentes,CompararPorNome);
             arrayDocentes = ordena.ordena();
-            int tam = arrayDocentes.size();
-            for(int i = 0;i < tam;i++){
-                itemMatricula = new QStandardItem(arrayDocentes[i].getMatricula());
-                itemNome = new QStandardItem(arrayDocentes[i].getNome());
-                itemDepartamento = new QStandardItem(arrayDocentes[i].getDepartamento());
-                itemTitulacao = new QStandardItem(arrayDocentes[i].getTitulacao());
-                itemTipoContrato = new QStandardItem(arrayDocentes[i].getTipoDeContrato());
-
-                model->setItem(i,0,itemMatricula);
-                model->setItem(i,1,itemNome);
-                model->setItem(i,2,itemDepartamento);
-                model->setItem(i,3,itemTitulacao);
-                model->setItem(i,4,itemTipoContrato);
-            }
+            imprimirNaTela(arrayDocentes);
         }else{
             if(index == 3){
                 docentesOrdena ordena(arrayDocentes,DepartamentoNome);
                 arrayDocentes = ordena.ordena();
-                int tam = arrayDocentes.size();
-                for(int i = 0;i < tam;i++){
-                    itemMatricula = new QStandardItem(arrayDocentes[i].getMatricula());
-                    itemNome = new QStandardItem(arrayDocentes[i].getNome());
-                    itemDepartamento = new QStandardItem(arrayDocentes[i].getDepartamento());
-                    itemTitulacao = new QStandardItem(arrayDocentes[i].getTitulacao());
-                    itemTipoContrato = new QStandardItem(arrayDocentes[i].getTipoDeContrato());
-
-                    model->setItem(i,0,itemMatricula);
-                    model->setItem(i,1,itemNome);
-                    model->setItem(i,2,itemDepartamento);
-                    model->setItem(i,3,itemTitulacao);
-                    model->setItem(i,4,itemTipoContrato);
-                }
-
+                imprimirNaTela(arrayDocentes);
             }else{
                 if(index == 4){
                     docentesOrdena ordena(arrayDocentes,CompararTitulacaoNome);
                     arrayDocentes = ordena.ordena();
-                    int tam = arrayDocentes.size();
-                    for(int i = 0;i < tam;i++){
-                        itemMatricula = new QStandardItem(arrayDocentes[i].getMatricula());
-                        itemNome = new QStandardItem(arrayDocentes[i].getNome());
-                        itemDepartamento = new QStandardItem(arrayDocentes[i].getDepartamento());
-                        itemTitulacao = new QStandardItem(arrayDocentes[i].getTitulacao());
-                        itemTipoContrato = new QStandardItem(arrayDocentes[i].getTipoDeContrato());
-
-                        model->setItem(i,0,itemMatricula);
-                        model->setItem(i,1,itemNome);
-                        model->setItem(i,2,itemDepartamento);
-                        model->setItem(i,3,itemTitulacao);
-                        model->setItem(i,4,itemTipoContrato);
-                    }
+                    imprimirNaTela(arrayDocentes);
                 }else{
                     if(index == 5){
                         docentesOrdena ordena(arrayDocentes,CompararTipoContratoNome);
                         arrayDocentes = ordena.ordena();
-                        int tam = arrayDocentes.size();
-                        for(int i = 0;i < tam;i++){
-                            itemMatricula = new QStandardItem(arrayDocentes[i].getMatricula());
-                            itemNome = new QStandardItem(arrayDocentes[i].getNome());
-                            itemDepartamento = new QStandardItem(arrayDocentes[i].getDepartamento());
-                            itemTitulacao = new QStandardItem(arrayDocentes[i].getTitulacao());
-                            itemTipoContrato = new QStandardItem(arrayDocentes[i].getTipoDeContrato());
-
-                            model->setItem(i,0,itemMatricula);
-                            model->setItem(i,1,itemNome);
-                            model->setItem(i,2,itemDepartamento);
-                            model->setItem(i,3,itemTitulacao);
-                            model->setItem(i,4,itemTipoContrato);
-                        }
+                        imprimirNaTela(arrayDocentes);
                     }else{
                         if(index == 6){
                             docentesOrdena ordena(arrayDocentes,DepartamentoTitulacaoNome);
                             arrayDocentes = ordena.ordena();
-                            int tam = arrayDocentes.size();
-                            for(int i = 0;i < tam;i++){
-                                itemMatricula = new QStandardItem(arrayDocentes[i].getMatricula());
-                                itemNome = new QStandardItem(arrayDocentes[i].getNome());
-                                itemDepartamento = new QStandardItem(arrayDocentes[i].getDepartamento());
-                                itemTitulacao = new QStandardItem(arrayDocentes[i].getTitulacao());
-                                itemTipoContrato = new QStandardItem(arrayDocentes[i].getTipoDeContrato());
-
-                                model->setItem(i,0,itemMatricula);
-                                model->setItem(i,1,itemNome);
-                                model->setItem(i,2,itemDepartamento);
-                                model->setItem(i,3,itemTitulacao);
-                                model->setItem(i,4,itemTipoContrato);
-                            }
+                            imprimirNaTela(arrayDocentes);
                         }else{
                             docentesOrdena ordena(arrayDocentes,DepartamentoTpNome);
                             arrayDocentes = ordena.ordena();
-                            int tam = arrayDocentes.size();
-                            for(int i = 0;i < tam;i++){
-                                itemMatricula = new QStandardItem(arrayDocentes[i].getMatricula());
-                                itemNome = new QStandardItem(arrayDocentes[i].getNome());
-                                itemDepartamento = new QStandardItem(arrayDocentes[i].getDepartamento());
-                                itemTitulacao = new QStandardItem(arrayDocentes[i].getTitulacao());
-                                itemTipoContrato = new QStandardItem(arrayDocentes[i].getTipoDeContrato());
-
-                                model->setItem(i,0,itemMatricula);
-                                model->setItem(i,1,itemNome);
-                                model->setItem(i,2,itemDepartamento);
-                                model->setItem(i,3,itemTitulacao);
-                                model->setItem(i,4,itemTipoContrato);
-                            }
+                            imprimirNaTela(arrayDocentes);
                         }
                     }
                 }
@@ -212,7 +123,7 @@ void MainWindow::on_pushButtonBuscar_clicked()
             docentesOrdena ordena(arrayDocentes,CompararPorNome);
             arrayDocentes = ordena.ordena();
             if(ui->lineEditDado->text().isEmpty()) throw QString("Digite o nome que seja buscar");
-            docentes obj = busca.buscaSequencialNome(arrayDocentes,ui->lineEditDado->text());
+            obj = busca.buscaSequencialNome(arrayDocentes,ui->lineEditDado->text());
             //if(obj.getNome().isEmpty())throw QString("Professor não existente na base de dados");
             if (model) {
                 model->removeRows(0, model->rowCount()); // Remove todas as linhas da tabela.
@@ -238,7 +149,7 @@ void MainWindow::on_pushButtonBuscar_clicked()
                 docentesOrdena ordena(arrayDocentes,CompararPorMatricula);
                 arrayDocentes = ordena.ordena();
                 if(ui->lineEditDado->text().isEmpty()) throw QString("Digite o nome que seja buscar");
-                docentes obj = busca.buscaSequencialMatricula(arrayDocentes,ui->lineEditDado->text());
+                obj = busca.buscaSequencialMatricula(arrayDocentes,ui->lineEditDado->text());
                 if (model) {
                     model->removeRows(0, model->rowCount()); // Remove todas as linhas da tabela.
                 }
@@ -263,7 +174,7 @@ void MainWindow::on_pushButtonBuscar_clicked()
                     docentesOrdena ordena(arrayDocentes,CompararPorNome);
                     arrayDocentes = ordena.ordena();
                     if(ui->lineEditDado->text().isEmpty()) throw QString("Digite o nome que seja buscar");
-                    docentes obj = busca.buscaBinariaNome(arrayDocentes,ui->lineEditDado->text());
+                    obj = busca.buscaBinariaNome(arrayDocentes,ui->lineEditDado->text());
                     if (model) {
                         model->removeRows(0, model->rowCount()); // Remove todas as linhas da tabela.
                     }
@@ -286,7 +197,7 @@ void MainWindow::on_pushButtonBuscar_clicked()
                     docentesOrdena ordena(arrayDocentes,CompararPorMatricula);
                     arrayDocentes = ordena.ordena();
                     if(ui->lineEditDado->text().isEmpty()) throw QString("Digite o nome que seja buscar");
-                    docentes obj = busca.buscaBinariaMatricula(arrayDocentes,ui->lineEditDado->text());
+                    obj = busca.buscaBinariaMatricula(arrayDocentes,ui->lineEditDado->text());
                     if (model){
                         model->removeRows(0, model->rowCount()); // Remove todas as linhas da tabela.
                     }
