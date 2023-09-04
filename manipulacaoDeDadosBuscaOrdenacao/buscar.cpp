@@ -10,7 +10,7 @@ docentes buscar::buscaSequencialNome(const std::vector<docentes>&vetor,QString d
         if(vetor[i].getNome() == dado)
             return vetor[i];
     }
-    return docentes();// retornando objeto vazio;
+    throw QString("Docente não existente na base de dados!");
 }
 docentes buscar::buscaSequencialMatricula(const std::vector<docentes>&vetor,QString dado){
     int tam = vetor.size();
@@ -18,7 +18,7 @@ docentes buscar::buscaSequencialMatricula(const std::vector<docentes>&vetor,QStr
         if(vetor[i].getMatricula() == dado)
             return vetor[i];
     }
-    return docentes();// retornando objeto vazio;
+    throw QString("Docente não existente na base de dados!");
 }
 docentes buscar::buscaBinariaNome(const std::vector<docentes>&vetor,QString dado){
     int tam = vetor.size();
@@ -27,12 +27,12 @@ docentes buscar::buscaBinariaNome(const std::vector<docentes>&vetor,QString dado
         medio = (inicio+final)/2;
         if(vetor[medio].getNome() == dado)
             return vetor[medio];
-        if(vetor[medio].getNome() < dado)
+        if(vetor[medio].getNome() > dado)
             final = medio -1;
         else
             inicio = medio + 1;
     }
-    return docentes();// retornando objeto vazio;
+    throw QString("Docente não existente na base de dados!");
 }
 
 docentes buscar::buscaBinariaMatricula(const std::vector<docentes>&vetor,QString dado){
@@ -42,10 +42,10 @@ docentes buscar::buscaBinariaMatricula(const std::vector<docentes>&vetor,QString
         medio = (inicio+final)/2;
         if(vetor[medio].getMatricula() == dado)
             return vetor[medio];
-        if(vetor[medio].getMatricula() < dado)
+        if(vetor[medio].getMatricula() > dado)
             final = medio -1;
         else
             inicio = medio + 1;
     }
-    return docentes();// retornando objeto vazio;
+    throw QString("Docente não existente na base de dados!");
 }
