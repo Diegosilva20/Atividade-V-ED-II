@@ -21,8 +21,12 @@ MainWindow::MainWindow(QWidget *parent)
     tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
     try {
-        ifstream arquivo("C:/Users/dpsil/Downloads/manipulacaoDeDadosBuscaOrdenacao/DocentesEscola.csv");
+        ifstream arquivo("/home/puc/Downloads/manipulacaoDeDadosBuscaOrdenacao/DocentesEscola.csv");
+        ofstream arquivoLog("/home/puc/Downloads/manipulacaoDeDadosBuscaOrdenacao/arquivoLog");
         if (!arquivo.is_open()) {
+            QMessageBox::warning(this, "Erro", "Erro ao abrir arquivo");
+        }
+        if (!arquivoLog.is_open()) {
             QMessageBox::warning(this, "Erro", "Erro ao abrir arquivo");
         }
         std::string linha = "";
@@ -38,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent)
                 docentes docente(matricula, nome, departamento, titulacao, tipoContrato);
                 arrayDocentes.push_back(docente);
             } else {
-
+                   arquivoLog << linha << endl;
             }
         }
         arquivo.close();
