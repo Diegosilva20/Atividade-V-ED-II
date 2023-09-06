@@ -20,29 +20,30 @@ MainWindow::MainWindow(QWidget *parent)
     tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
-    try{
+    try {
         ifstream arquivo("C:/Users/dpsil/Downloads/manipulacaoDeDadosBuscaOrdenacao/DocentesEscola.csv");
-        if(!arquivo.is_open()){
-            throw std::runtime_error("ERRO AO ABRIR ARQUIVO");
+        if (!arquivo.is_open()) {
+            QMessageBox::warning(this, "Erro", "Erro ao abrir arquivo");
         }
-        std::string linha="";
-        while(std::getline(arquivo,linha)){
-            QStringList lista = QString::fromStdString(linha).split(';');//convertendo string para QString
-            // verificando abaixo se alguma linha do arquivo está com erro
-            if((!(lista.value(0).isEmpty()||lista.value(1).isEmpty()||lista.value(2).isEmpty()||lista.value(3).isEmpty()||lista.value(4).isEmpty()))&&lista.size()==5){
+        std::string linha = "";
+        while (std::getline(arquivo, linha)) {
+            QStringList lista = QString::fromStdString(linha).split(';'); // Convertendo string para QString
+            // Verificando abaixo se alguma linha do arquivo está com erro
+            if (!(lista.value(0).isEmpty() || lista.value(1).isEmpty() || lista.value(2).isEmpty() || lista.value(3).isEmpty() || lista.value(4).isEmpty()) && lista.size() == 5) {
                 QString matricula = lista.value(0);
                 QString nome = lista.value(1);
                 QString departamento = lista.value(2);
                 QString titulacao = lista.value(3);
                 QString tipoContrato = lista.value(4);
-                docentes docente(matricula,nome,departamento,titulacao,tipoContrato);
+                docentes docente(matricula, nome, departamento, titulacao, tipoContrato);
                 arrayDocentes.push_back(docente);
+            } else {
+
             }
         }
         arquivo.close();
-
-    } catch(QString &erro){
-        QMessageBox::information(this,"ERRO",erro);
+    } catch (QString &erro) {
+        QMessageBox::information(this, "ERRO", erro);
     }
 
     imprimirNaTela(arrayDocentes);

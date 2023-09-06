@@ -7,6 +7,8 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <QTextStream>
+#include <QFile>
 #include <QMessageBox>
 #include "readcsv.h"
 #include "docentes.h"
